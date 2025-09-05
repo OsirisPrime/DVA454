@@ -20,7 +20,6 @@ __error__(char *pcFilename, uint32_t ui32Line)
 int main(void)
 {
     unsigned char ucDelta, ucState;
-    volatile uint32_t times_to_blink;   // The number of times the LED will blink
     volatile uint32_t ui32Loop;         // Delay time
 
     // Configure the device pins.
@@ -40,7 +39,7 @@ int main(void)
 
         if(BUTTON_PRESSED(RIGHT_BUTTON, ucState, ucDelta)){
             // Blink 5 times
-            for(times_to_blink = 0; times_to_blink < 5; times_to_blink++){
+            while(1){
                 // Turn on D1.
                 LEDWrite(CLP_D1, 1);
 

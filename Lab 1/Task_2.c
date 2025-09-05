@@ -46,7 +46,7 @@ int main(void)
         else // if it has been released
         {
             GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0); // off
-            if (BUTTON_RELEASED(LEFT_BUTTON, ucState, ucDelta)) // toggle off when the left button is pressed
+            if (BUTTON_RELEASED(LEFT_BUTTON, ucState, ucDelta)) // toggle state off when the LEFT button is released
                 toggleState = false;
 
         }

@@ -28,7 +28,7 @@ int main(void)
     // Initialize the button driver.
     ButtonsInit();
 
-    // Enable the GPIO pin for the LED (PN0).
+    // Enable the GPIO pin for the LED (PN1).
     // Set the direction as output, and
     // enable the GPIO pin for digital function.
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_1);

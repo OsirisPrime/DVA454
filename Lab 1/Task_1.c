@@ -20,7 +20,7 @@ __error__(char *pcFilename, uint32_t ui32Line)
 int main(void)
 {
     unsigned char ucDelta, ucState;
-    volatile uint32_t ui32Loop;         // Delay time
+    volatile uint32_t Loop;         // Delay time
 
     // Configure the device pins.
     PinoutSet(false, false);
@@ -31,7 +31,7 @@ int main(void)
     // Enable the GPIO pin for the LED (PN0).
     // Set the direction as output, and
     // enable the GPIO pin for digital function.
-    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_1);
 
     while(1) {
         // Poll the buttons.
@@ -39,18 +39,18 @@ int main(void)
 
         if(BUTTON_PRESSED(RIGHT_BUTTON, ucState, ucDelta)){
             while(1){
-                // Turn on D1.
-                LEDWrite(CLP_D1, 1);
+                // Turn on LED.
+                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
 
                 // Delay for a bit
-                for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){
+                for(Loop = 0; Loop < 100000; Loop++){
                 }
 
-                // Turn off D1.
-                LEDWrite(CLP_D1, 0);
+                // Turn off LED.
+                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0);
 
                 // Delay for a bit
-                for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++){
+                for(Loop = 0; Loop < 100000; Loop++){
                 }
             }
         }

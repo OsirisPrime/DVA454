@@ -38,7 +38,6 @@ int main(void)
         ucState = ButtonsPoll(&ucDelta, 0);
 
         if(BUTTON_PRESSED(RIGHT_BUTTON, ucState, ucDelta)){
-            // Blink 5 times
             while(1){
                 // Turn on D1.
                 LEDWrite(CLP_D1, 1);

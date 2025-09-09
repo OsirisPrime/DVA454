@@ -58,7 +58,7 @@ int main(void)
     float pwm_word;
     uint32_t systemClock;
 
-    systemClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480), 16000000);
+    systemClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480), 16000);
     pwm_word = systemClock / 200;
 
     ConfigureUART();
@@ -73,20 +73,20 @@ int main(void)
 
         // Case 1: 0% -> LED off
         if (brightness <= 0) {
+            GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
             GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, 0);
-//            PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, 0);
             UARTprintf("LED off\n\n");
 
         // Case 2: 100% -> LED fully on
         } else if (brightness >= 100) {
+            GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
             GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
-//            PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, pwm_word);
             UARTprintf("LED fully on\n\n");
 
         // Case 3: 1-99% -> PMW LED control
         } else {
-
-            PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, (pwm_word * brightness) / 400);
+            GPIOPinTypePWM(GPIO_PORTF_BASE, GPIO_PIN_2);
+            PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, (pwm_word*brightness)/100);
             UARTprintf("LED brightness set to %d\n\n", brightness);
         }
     }

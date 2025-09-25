@@ -35,7 +35,7 @@ int main(void)
 
     ConfigureUART();                        // initialize and configure UART
     create_stopwatch();                     // Create a stopwatch (starts by default at 00:00:00)
-    IntMasterEnable();                      // Enable UART 0.
+    IntMasterEnable();                      // Enable the processor to respond to interrupts.
 
     UART_Send(
             "\n\rStopwatch created!\n\r"
@@ -92,3 +92,4 @@ int main(void)
         }
     }
 }
+

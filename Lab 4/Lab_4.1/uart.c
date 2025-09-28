@@ -62,8 +62,8 @@ void UART_reset(void) {
 
 // Uses UART_putChar to write a string
 void UART_putString(char *string) {
-    while (*string) {
-        UART_putChar(*string++);
+    while (*string) {                                   // Loop until the end of the string
+        UART_putChar(*string++);                        // Send character
     }
 }
 
@@ -74,7 +74,7 @@ void UART_getString(char *string) {
     uint32_t i = 0;
 
     while (i < 32 - 1) {                                // Get 31 characters (buffer is 32 and leave space for null terminator)
-        c = UART_getChar();                             // Get character from register
+        c = UART_getChar();                             // Get character
         if (c == '\r' || c == '\n') {                   // End on enter
             break;
         }
@@ -82,6 +82,7 @@ void UART_getString(char *string) {
     }
     string[i] = '\0';                                   // Add null terminator at the end of the string
 }
+
 
 
 

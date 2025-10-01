@@ -1,0 +1,151 @@
+******************************************************************************
+                  TI ARM Linker PC v20.2.7                     
+******************************************************************************
+>> Linked Wed Oct  1 13:29:07 2025
+
+OUTPUT FILE NAME:   <Lab_4.1.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 0000038d
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  FLASH                 00000000   00100000  000003d0  000ffc30  R  X
+  SRAM                  20000000   00040000  00000200  0003fe00  RW X
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    000003d0   000003d0    r-x
+  00000000    00000000    00000208   00000208    r-- .intvecs
+  00000208    00000208    000001c4   000001c4    r-x .text
+  000003cc    000003cc    00000004   00000004    r-- .const
+20000000    20000000    00000200   00000000    rw-
+  20000000    20000000    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    00000208     
+                  00000000    00000208     tm4c129encpdt_startup_ccs.obj (.intvecs)
+
+.text      0    00000208    000001c4     
+                  00000208    00000110     uart.obj (.text)
+                  00000318    00000074     main.obj (.text)
+                  0000038c    0000002c     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noinit_noargs:_c_int00_noinit_noargs)
+                  000003b8    0000000c     tm4c129encpdt_startup_ccs.obj (.text)
+                  000003c4    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  000003c8    00000004                                   : exit.c.obj (.text:abort:abort)
+
+.const     0    000003cc    00000004     
+                  000003cc    00000004     main.obj (.const:.string:$P$T0$1)
+
+.cinit     0    00000000    00000000     UNINITIALIZED
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.stack     0    20000000    00000200     UNINITIALIZED
+                  20000000    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.stack)
+                  20000004    000001fc     --HOLE--
+
+__llvm_prf_cnts 
+*          0    20000000    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module                          code   ro data   rw data
+       ------                          ----   -------   -------
+    .\
+       tm4c129encpdt_startup_ccs.obj   12     520       0      
+       uart.obj                        272    0         0      
+       main.obj                        116    4         0      
+    +--+-------------------------------+------+---------+---------+
+       Total:                          400    524       0      
+                                                               
+    C:\ti\ccs1281\ccs\tools\compiler\ti-cgt-arm_20.2.7.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
+       boot_cortex_m.c.obj             44     0         0      
+       exit.c.obj                      4      0         0      
+       pre_init.c.obj                  4      0         0      
+    +--+-------------------------------+------+---------+---------+
+       Total:                          52     0         0      
+                                                               
+       Stack:                          0      0         512    
+    +--+-------------------------------+------+---------+---------+
+       Grand Total:                    452    524       512    
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                   
+-------   ----                   
+000003c9  C$$EXIT                
+000003b9  ResetISR               
+000002d1  UART_getChar           
+000002e3  UART_getString         
+0000024d  UART_init              
+0000022d  UART_putChar           
+00000239  UART_putString         
+00000209  UART_reset             
+20000200  __STACK_END            
+00000200  __STACK_SIZE           
+20000200  __STACK_TOP            
+ffffffff  __TI_pprof_out_hndl    
+ffffffff  __TI_prof_data_size    
+ffffffff  __TI_prof_data_start   
+00000000  __TI_static_base__     
+ffffffff  __binit__              
+ffffffff  __c_args__             
+UNDEFED   __mpu_init             
+20000000  __stack                
+20000000  __start___llvm_prf_cnts
+20000000  __stop___llvm_prf_cnts 
+0000038d  _c_int00_noinit_noargs 
+000003c5  _system_pre_init       
+000003c9  abort                  
+ffffffff  binit                  
+00000319  checkString            
+00000000  g_pfnVectors           
+00000345  main                   
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                   
+-------   ----                   
+00000000  __TI_static_base__     
+00000000  g_pfnVectors           
+00000200  __STACK_SIZE           
+00000209  UART_reset             
+0000022d  UART_putChar           
+00000239  UART_putString         
+0000024d  UART_init              
+000002d1  UART_getChar           
+000002e3  UART_getString         
+00000319  checkString            
+00000345  main                   
+0000038d  _c_int00_noinit_noargs 
+000003b9  ResetISR               
+000003c5  _system_pre_init       
+000003c9  C$$EXIT                
+000003c9  abort                  
+20000000  __stack                
+20000000  __start___llvm_prf_cnts
+20000000  __stop___llvm_prf_cnts 
+20000200  __STACK_END            
+20000200  __STACK_TOP            
+ffffffff  __TI_pprof_out_hndl    
+ffffffff  __TI_prof_data_size    
+ffffffff  __TI_prof_data_start   
+ffffffff  __binit__              
+ffffffff  __c_args__             
+ffffffff  binit                  
+UNDEFED   __mpu_init             
+
+[28 symbols]

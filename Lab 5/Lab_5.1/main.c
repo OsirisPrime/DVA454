@@ -22,8 +22,7 @@ TaskHandle_t LED_D1;
 TaskHandle_t LED_D2;
 TaskHandle_t LED_D3;
 TaskHandle_t LED_D4;
-TaskHandle_t LeftButton;
-TaskHandle_t RightButton;
+
 
 
 #ifdef DEBUG
@@ -37,25 +36,25 @@ __error__(char *pcFilename, uint32_t ui32Line)
 
 // Configure the LED
 void ConfigureLED(void) {
-    PinoutSet(false, false);                                // Configure the device pins.
+    PinoutSet(false, false);                                                // Configure the device pins.
 
     // Enable the GPIO pin for the LEDs. Set the direction as output, and enable the GPIO pin for digital function.
-    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0 | GPIO_PIN_1);    // PN0 (D2) and PN1 (D1)
-    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0 | GPIO_PIN_4);    // PF0 (D4) and PF4 (D3)
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0 | GPIO_PIN_1);        // PN0 (D2) and PN1 (D1)
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0 | GPIO_PIN_4);        // PF0 (D4) and PF4 (D3)
 }
 
 
 // Configure the UART.
 void ConfigureUART(void) {
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);            // Enable GPIOA
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);            // Enable UART0
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);                            // Enable GPIOA
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);                            // Enable UART0
 
-    GPIOPinConfigure(GPIO_PA0_U0RX);                        // Receive pin
-    GPIOPinConfigure(GPIO_PA1_U0TX);                        // Transmit pin
+    GPIOPinConfigure(GPIO_PA0_U0RX);                                        // Receive pin
+    GPIOPinConfigure(GPIO_PA1_U0TX);                                        // Transmit pin
 
     GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
     UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-    UARTStdioConfig(0, 115200, 16000000);                   // Configure at 115200 baud
+    UARTStdioConfig(0, 115200, 16000000);                                   // Configure at 115200 baud
 }
 
 
@@ -76,51 +75,52 @@ void LEDcontrol(void *x) {
 
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
-    while(1) {
-        GPIOPinWrite(port, pin, pin);                   // Turn on LED
-        vTaskDelay(pdMS_TO_TICKS(100));                 // Wait 0.1s
-        GPIOPinWrite(port, pin, 0);                     // Turn off LED
+    for(;;) {
+        GPIOPinWrite(port, pin, pin);                                       // Turn on LED
+        vTaskDelay(pdMS_TO_TICKS(100));                                     // Wait 0.1s
+        GPIOPinWrite(port, pin, 0);                                         // Turn off LED
         UARTprintf("LED_D%d blink\n", led);
-        vTaskDelayUntil(&xLastWakeTime, period);        // Wait until next period
+        vTaskDelayUntil(&xLastWakeTime, period);                            // Wait until next period
     }
 
 }
 
 
-// Button logic
-void buttonPressed(void *x) {
-    int btn = (int) x;
+void LeftButton(void *x) {
     unsigned char ucDelta, ucState;
-
-    if(btn == 1){
-        while(1) {
-            ucState = ButtonsPoll(&ucDelta, 0);                                 // Poll the buttons
-            if(BUTTON_PRESSED(LEFT_BUTTON, ucState, ucDelta)) {
-                UARTprintf("\nLeft Button: Turn on LED 1 for 10 seconds.");
-                vTaskSuspend(LED_D1);                                           // Suspend LED 1
-                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);          // Turn on D1
-                vTaskDelay(pdMS_TO_TICKS(10000));                               // Wait 10s
-                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0);                   // Turn off D1
-                vTaskResume(LED_D1);                                            // Resume LED 1
-                UARTprintf("\nLeft Button: Resume LED 1.");
-            }
-        }
-    }
-    else {
-        while(1) {
-            ucState = ButtonsPoll(&ucDelta, 0);                                 // Poll the buttons
-            if(BUTTON_PRESSED(RIGHT_BUTTON, ucState, ucDelta)) {
-                UARTprintf("\nRight Button: Turn on LED 2 for 10 seconds.");
-                vTaskSuspend(LED_D2);                                           // Suspend LED 2
-                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);          // Turn on D2
-                vTaskDelay(pdMS_TO_TICKS(10000));                               // Wait 10s
-                GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);                   // Turn off D2
-                vTaskResume(LED_D2);                                            // Resume LED 2
-                UARTprintf("\nRight Button: Resume LED 2.");
-            }
+    ButtonsInit();
+    for(;;) {
+        ucState = ButtonsPoll(&ucDelta, 0);                                 // Poll the buttons
+        if(BUTTON_PRESSED(LEFT_BUTTON, ucState, ucDelta)) {
+            UARTprintf("\nLeft Button: Turn on LED 1 for 10 seconds.");
+            vTaskSuspend(LED_D1);                                           // Suspend LED 1
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);          // Turn on D1
+            vTaskDelay(pdMS_TO_TICKS(10000));                               // Wait 10s
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0);                   // Turn off D1
+            vTaskResume(LED_D1);                                            // Resume LED 1
+            UARTprintf("\nLeft Button: Resume LED 1.");
         }
     }
 }
+
+
+void RightButton(void *x) {
+    unsigned char ucDelta, ucState;
+    ButtonsInit();
+    for(;;) {
+        ucState = ButtonsPoll(&ucDelta, 0);                                 // Poll the buttons
+        if(BUTTON_PRESSED(RIGHT_BUTTON, ucState, ucDelta)) {
+            UARTprintf("\nRight Button: Turn on LED 2 for 10 seconds.");
+            vTaskSuspend(LED_D2);                                           // Suspend LED 2
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);          // Turn on D2
+            vTaskDelay(pdMS_TO_TICKS(10000));                               // Wait 10s
+            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0);                   // Turn off D2
+            vTaskResume(LED_D2);                                            // Resume LED 2
+            UARTprintf("\nRight Button: Resume LED 2.");
+        }
+    }
+}
+
 
 int main(void)
 {
@@ -135,9 +135,9 @@ int main(void)
     xTaskCreate(LEDcontrol, "LED_D2", configMINIMAL_STACK_SIZE, (void*)2, 1, &LED_D2);
     xTaskCreate(LEDcontrol, "LED_D3", configMINIMAL_STACK_SIZE, (void*)3, 1, &LED_D3);
     xTaskCreate(LEDcontrol, "LED_D4", configMINIMAL_STACK_SIZE, (void*)4, 1, &LED_D4);
-    xTaskCreate(buttonPressed, "LeftButton", configMINIMAL_STACK_SIZE, (void*)1, 2, &LeftButton);
-    xTaskCreate(buttonPressed, "RightButton", configMINIMAL_STACK_SIZE, (void*)2, 2, &RightButton);
+    xTaskCreate(LeftButton, "LeftButton", configMINIMAL_STACK_SIZE, (void*)0, 1, NULL);
+    xTaskCreate(RightButton,"RightButton", configMINIMAL_STACK_SIZE, (void*)0, 1, NULL);
 
     vTaskStartScheduler();              // Start the scheduler
-	while(1);
+	for(;;);
 }

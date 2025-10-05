@@ -16,7 +16,7 @@
 #include "inc/tm4c129encpdt.h"
 
 
-// Semaphore
+// Semaphore (shared resource)
 SemaphoreHandle_t xSemaphore;
 
 
@@ -43,24 +43,31 @@ void ConfigureUART(void) {
 }
 
 
-// Low priority
+// Simulate workload in ms
+void simulate_workload(uint32_t ms) {
+    TickType_t startTime = xTaskGetTickCount();
+    while((xTaskGetTickCount() - startTime) < pdMS_TO_TICKS(ms));
+}
+
+
+// Low priority with shared resource
 void Task1(void *x) {
     volatile uint32_t i;
+    TickType_t xLastWakeTime = xTaskGetTickCount();                         // Get task start time
+
     for(;;) {
-        TickType_t xLastWakeTime = xTaskGetTickCount();
         UARTprintf("\nTask 1 started");
 
-        xSemaphoreTake(xSemaphore, portMAX_DELAY);
+        xSemaphoreTake(xSemaphore, portMAX_DELAY);                          // Try to take semaphore
         UARTprintf("\nTask 1 sem take");
 
         UARTprintf("\nTask 1 started its workload");
-        //vTaskDelay(pdMS_TO_TICKS(1500));
-        for (i = 0; i < 16000000; i++);
+        simulate_workload(1000);                                            // Simulate workload for 1s
 
         UARTprintf("\nTask 1 sem give");
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(xSemaphore);                                         // Give semaphore
         UARTprintf("\nTask 1 finished");
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(3000));
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5000));               // Do task again with a period of 5s
     }
 }
 
@@ -69,41 +76,39 @@ void Task1(void *x) {
 void Task2(void *x) {
     volatile uint32_t i;
     vTaskDelay(pdMS_TO_TICKS(1000));
+    TickType_t xLastWakeTime = xTaskGetTickCount();                         // Get task start time
 
     for(;;) {
-        TickType_t xLastWakeTime = xTaskGetTickCount();
         UARTprintf("\nTask 2 started");
 
         UARTprintf("\nTask 2 started its workload");
-        //vTaskDelay(pdMS_TO_TICKS(1000));
-        for (i = 0; i < 16000000; i++);
+        simulate_workload(1500);                                            // Simulate workload for 1.5s
 
         UARTprintf("\nTask 2 finished");
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5000));
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5000));               // Do task again with a period of 5s
     }
 }
 
 
-// High priority
+// High priority with shared resource
 void Task3(void *x) {
     volatile uint32_t i;
     vTaskDelay(pdMS_TO_TICKS(500));
+    TickType_t xLastWakeTime = xTaskGetTickCount();                         // Get task start time
 
     for(;;) {
-        TickType_t xLastWakeTime = xTaskGetTickCount();
         UARTprintf("\nTask 3 started");
 
-        xSemaphoreTake(xSemaphore, portMAX_DELAY);
+        xSemaphoreTake(xSemaphore, portMAX_DELAY);                          // Try to take semaphore
         UARTprintf("\nTask 3 sem take");
 
         UARTprintf("\nTask 3 started its workload");
-        //vTaskDelay(pdMS_TO_TICKS(500));
-        for (i = 0; i < 16000000 / 2; i++);
+        simulate_workload(500);                                             // Simulate workload for 0.5s
 
         UARTprintf("\nTask 3 sem give");
-        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(xSemaphore);                                         // Give semaphore
         UARTprintf("\nTask 3 finished");
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10000));
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(7000));               // do task again with a period of 7s
     }
 }
 

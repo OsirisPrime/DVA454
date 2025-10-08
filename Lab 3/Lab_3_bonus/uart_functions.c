@@ -16,7 +16,7 @@
 
 
 // UART ISR
-void UARTIntHandler(void)
+void UART_Interrupt_Handler(void)
 {
     uint32_t status = UARTIntStatus(UART0_BASE, true);
 UARTIntClear(UART0_BASE, status);                               // Clear the interrupt
@@ -42,7 +42,7 @@ void ConfigureUART(void) {
     UARTStdioConfig(0, 115200, 16000000);
 
     // Register ISR and enable UART RX interrupts
-    UARTIntRegister(UART0_BASE, UARTIntHandler);                // Register the function as the ISR of UART0
+    UARTIntRegister(UART0_BASE, UART_Interrupt_Handler);        // Register the function as the ISR of UART0
     UARTIntEnable(UART0_BASE, UART_INT_RX | UART_INT_RT);       // Enable UART interrupts for RX and receive timeout events
     IntEnable(INT_UART0);                                       // Enable interrupts for UART0
 }
@@ -58,3 +58,4 @@ void UART_Send(const char *str) {
 void UART_Receive(char *buffer, uint32_t size) {
     UARTgets(buffer, size);
 }
+

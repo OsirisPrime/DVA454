@@ -156,9 +156,9 @@ int main(void)
 {
     // Set clock frequency to 120 MHz
     SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480), 120000000);
-    ConfigureLED();                         // initialize LEDs
-    ConfigureUART();                        // initialize UART
-    ButtonsInit();
+    ConfigureLED();                         // Initialize LEDs
+    ConfigureUART();                        // Initialize UART
+    ButtonsInit();							// Initialize Buttons
 
     // Create all tasks
     xTaskCreate(LEDcontrol, "LED_D1", configMINIMAL_STACK_SIZE, (void*)1, 1, &LED_D1);
@@ -170,3 +170,4 @@ int main(void)
     vTaskStartScheduler();                  // Start the scheduler
 	for(;;);
 }
+

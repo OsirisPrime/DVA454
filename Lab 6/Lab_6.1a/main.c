@@ -66,6 +66,7 @@ char removeByteFromBuffer(void) {
     for(i = 0; i < byteCount - 1; i++) {
         buffer[i] = buffer[i + 1];
     }
+	byteCount--;
     return byte;
 }
 
@@ -127,3 +128,4 @@ int main(void)
     vTaskStartScheduler();                  // Start the scheduler
 	for(;;);
 }
+

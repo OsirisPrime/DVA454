@@ -89,8 +89,8 @@ int main(void)
 
     // Create queues
     micQueue = xQueueCreate(8, sizeof(uint32_t));
-    joyQueue = xQueueCreate(4, sizeof(uint32_t));
-    accQueue = xQueueCreate(2, sizeof(uint32_t));
+    joyQueue = xQueueCreate(4, sizeof(uint32_t[2]));
+    accQueue = xQueueCreate(2, sizeof(uint32_t[3]));
 
     // Check if it failed to create queues
     if (micQueue == NULL || joyQueue == NULL || accQueue == NULL) {
@@ -109,3 +109,4 @@ int main(void)
     for(;;);
 
 }
+
